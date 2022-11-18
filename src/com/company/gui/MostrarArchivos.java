@@ -1,10 +1,7 @@
 package com.company.gui;
 
-import com.company.dao.DAOCliente;
-import com.company.entidades.server;
 import com.company.service.ServiceCliente;
 import com.company.service.ServiceException;
-import org.apache.commons.net.ftp.FTPClient;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,12 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class MostrarArchivos extends JPanel {
+    JTextField jTextFieldDir;
+    JTextArea jTextArea;
     static String pathRemoto=null;
-    PanelManager panelMostrarArchivos;
     public JTextField jTextFieldDir2;
     String path2;
 
@@ -25,16 +21,13 @@ public class MostrarArchivos extends JPanel {
         return pathRemoto;
     }
 
-    public MostrarArchivos(PanelManager panelPrincipal){
-        panelMostrarArchivos = panelPrincipal;
+    public MostrarArchivos(){
         armarMostrarArchivos(null);
     }
-
 
     public void armarMostrarArchivos(PanelManager panelPrincipal){
         armarPanelArchivo("C:/",BorderLayout.WEST);
         armarPanelArchivoRemoto(BorderLayout.EAST);
-
     }
 
     void armarPanelArchivoRemoto(String ubicacion){
@@ -45,7 +38,6 @@ public class MostrarArchivos extends JPanel {
 
         JPanel frame = new JPanel();
         frame.setLayout(new BorderLayout());
-
 
         jTextFieldDir = new JTextField(1);
         jTextArea = new JTextArea(20,30);
@@ -63,30 +55,42 @@ public class MostrarArchivos extends JPanel {
 
         add(frame,ubicacion);
 
-
-
-
         jButtonRefresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                try {
-                    if(pathRemoto == null){
-                        pathRemoto = ServiceCliente.getFtpClient().printWorkingDirectory();
-                        jTextFieldDir2.setText(pathRemoto);
+                if((ServiceCliente.getFtpClient())!=null && ServiceCliente.getFtpClient().isConnected()) {
+                    try {
+                        if (pathRemoto == null) {
+                            pathRemoto = ServiceCliente.getFtpClient().printWorkingDirectory();
+                            jTextFieldDir2.setText(pathRemoto);
+                        }
+                        pathRemoto = jTextFieldDir2.getText();
+                        jTextFieldDir.setText(pathRemoto);
+                        jTextArea.setText(ServiceCliente.mostrarArchivosPantallaRemoto(pathRemoto));
+                    } catch (ServiceException | IOException e) {
+                        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                    pathRemoto=jTextFieldDir2.getText();
-                    jTextFieldDir.setText(pathRemoto);
-                    jTextArea.setText(ServiceCliente.mostrarArchivosPantallaRemoto(pathRemoto));
-                } catch (ServiceException | IOException e) {
-                    JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
     }
+
+//    void refreshButton(){
+//        try {
+//            if(pathRemoto == null){
+//                pathRemoto = ServiceCliente.getFtpClient().printWorkingDirectory();
+//                jTextFieldDir2.setText(pathRemoto);
+//            }
+//            pathRemoto=jTextFieldDir2.getText();
+//            jTextFieldDir.setText(pathRemoto);
+//            jTextArea.setText(ServiceCliente.mostrarArchivosPantallaRemoto(pathRemoto));
+//        } catch (ServiceException | IOException e) {
+//            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+//        }
+//    }
+
     void armarPanelArchivo(String path, String ubicacion){
-        JTextField jTextFieldDir;
-        JTextArea jTextArea;
         JButton jButton;
         JScrollPane jScrollPane;
         path2 = path;
@@ -139,4 +143,5 @@ public class MostrarArchivos extends JPanel {
         });
 
     }
+
 }

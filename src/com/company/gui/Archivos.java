@@ -4,7 +4,6 @@ import com.company.entidades.server;
 import com.company.service.ServiceCliente;
 import com.company.service.ServiceException;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,8 +24,6 @@ public class Archivos extends JPanel {
     JButton jButtonBorrarLocal;
     JButton jButtonBorrarRemoto;
 
-
-
     public Archivos(PanelManager panelPrincipal){
         panelArchivo = panelPrincipal;
         armarPanelArchivo(null);
@@ -41,7 +38,6 @@ public class Archivos extends JPanel {
         jButtonBorrarLocal = new JButton("Borrar Local");
         jButtonBorrarRemoto = new JButton("Borrar Remoto");
 
-
         botonesArchivos.add(jButtonSubir);
         botonesArchivos.add(jButtonBajar);
         botonesArchivos.add(jButtonRenombrarLocal);
@@ -49,10 +45,9 @@ public class Archivos extends JPanel {
         botonesArchivos.add(jButtonBorrarLocal);
         botonesArchivos.add(jButtonBorrarRemoto);
 
-
         add(botonesArchivos,BorderLayout.CENTER);
 
-        FTPClient ftpClient= ServiceCliente.getFtpClient(); //esto es para habilitar los botones en un futuro
+        FTPClient ftpClient= ServiceCliente.getFtpClient();
         if(ftpClient!=null){
             boolean estadoConexion = ftpClient.isConnected();
             if(estadoConexion){
@@ -60,12 +55,11 @@ public class Archivos extends JPanel {
             }
         }
 
-
         jButtonSubir.addActionListener(new ActionListener() { //Subir archivo
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if(actionEvent.getSource()==jButtonSubir){
-                    subirArchivo();
+                        subirArchivo();
                 }
             }
         });
@@ -74,7 +68,6 @@ public class Archivos extends JPanel {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 bajarArchivo();
-
             }
         });
 
@@ -112,46 +105,49 @@ public class Archivos extends JPanel {
     }
 
     public void subirArchivo(){
-        JFileChooser file_origin = new JFileChooser();
-        JFileChooser file_destination = new JFileChooser();
+        if((ServiceCliente.getFtpClient())!=null) {
+            JFileChooser file_origin = new JFileChooser();
+            JFileChooser file_destination = new JFileChooser();
 
-        file_origin.setCurrentDirectory(file_origin.getFileSystemView().getParentDirectory(new File("C:\\")));
+            file_origin.setCurrentDirectory(file_origin.getFileSystemView().getParentDirectory(new File("C:\\")));
 
-        //file_destination.setCurrentDirectory(file_origin.getFileSystemView().getParentDirectory(new File("C:\\")));
-        // file_destination.setCurrentDirectory(new File("/test/"));
-        //file_destination.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); //Esto me permite seleccionar solamente un directorio y no un archivo
+            //file_destination.setCurrentDirectory(file_origin.getFileSystemView().getParentDirectory(new File("C:\\")));
+            // file_destination.setCurrentDirectory(new File("/test/"));
+            //file_destination.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); //Esto me permite seleccionar solamente un directorio y no un archivo
 
-        int res=file_origin.showOpenDialog(null);
+            int res = file_origin.showOpenDialog(null);
 
-        if(res == JFileChooser.APPROVE_OPTION){
-            String localPath = String.valueOf(new File(file_origin.getSelectedFile().getAbsoluteFile().toURI()));
-            String remotePath;
-            remotePath = MostrarArchivos.getPathRemoto();
-            try{
-                serviceCliente.subirArchivo(localPath,remotePath);
+            if (res == JFileChooser.APPROVE_OPTION) {
+                String localPath = String.valueOf(new File(file_origin.getSelectedFile().getAbsoluteFile().toURI()));
+                String remotePath;
+                remotePath = MostrarArchivos.getPathRemoto();
+                try {
+                    serviceCliente.subirArchivo(localPath, remotePath);
 
-            } catch (ServiceException e){
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ServiceException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }
 
     public void bajarArchivo(){
-        JFileChooser file_origin = new JFileChooser();
+        if((ServiceCliente.getFtpClient())!=null) {
+            JFileChooser file_origin = new JFileChooser();
 
-        file_origin.setCurrentDirectory(file_origin.getFileSystemView().getParentDirectory(new File("C:\\")));
+            file_origin.setCurrentDirectory(file_origin.getFileSystemView().getParentDirectory(new File("C:\\")));
 
-        int res=file_origin.showOpenDialog(null);
+            int res = file_origin.showOpenDialog(null);
 
-        if(res == JFileChooser.APPROVE_OPTION){
-            String localPath = String.valueOf(new File(file_origin.getSelectedFile().getAbsoluteFile().toURI()));
-            try{
-                serviceCliente.bajarArchivo(localPath,MostrarArchivos.getPathRemoto());
+            if (res == JFileChooser.APPROVE_OPTION) {
+                String localPath = String.valueOf(new File(file_origin.getSelectedFile().getAbsoluteFile().toURI()));
+                try {
+                    serviceCliente.bajarArchivo(localPath, MostrarArchivos.getPathRemoto());
 
-            } catch (ServiceException e){
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ServiceException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-
         }
     }
 
@@ -177,11 +173,13 @@ public class Archivos extends JPanel {
     }
 
     public void renombrarArchivoRemoto(){
-        String newName = JOptionPane.showInputDialog("Ingrese el nuevo nombre");
-        try {
-            serviceCliente.renombrarArchivoRemoto(MostrarArchivos.getPathRemoto(), newName);
-        } catch (ServiceException e){
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        if((ServiceCliente.getFtpClient())!=null) {
+            String newName = JOptionPane.showInputDialog("Ingrese el nuevo nombre");
+            try {
+                serviceCliente.renombrarArchivoRemoto(MostrarArchivos.getPathRemoto(), newName);
+            } catch (ServiceException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -203,11 +201,13 @@ public class Archivos extends JPanel {
     }
 
     public void borrarRemoto(){
-        try{
-            serviceCliente.borrarArchivoRemoto(MostrarArchivos.getPathRemoto());
+        if((ServiceCliente.getFtpClient())!=null) {
+            try {
+                serviceCliente.borrarArchivoRemoto(MostrarArchivos.getPathRemoto());
 
-        } catch (ServiceException e){
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ServiceException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }

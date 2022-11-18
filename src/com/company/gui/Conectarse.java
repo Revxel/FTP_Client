@@ -1,7 +1,6 @@
 package com.company.gui;
 
 import com.company.entidades.*;
-import com.company.gui.MostrarArchivos;
 
 import com.company.service.ServiceCliente;
 import com.company.service.ServiceException;
@@ -11,10 +10,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 public class Conectarse extends JPanel {
     FTPClient ftpClient;
+    MostrarArchivos mostrarArchivos = new MostrarArchivos();
     ServiceCliente serviceCliente = new ServiceCliente();
     JPanel conectarse;
     JPanel botones;
@@ -45,21 +44,25 @@ public class Conectarse extends JPanel {
 
     public void conectarServer(){
         server servidor = new server();
-//                servidor.setAddress(jTextFieldHost.getText());
-//                servidor.setPort(Integer.parseInt(jTextFieldPort.getText()));
-//                servidor.setUsername(jTextFieldUsername.getText());
-//                servidor.setPassword(jTextFieldPassword.getText());
-        servidor.setAddress("192.168.0.3");
-        //servidor.setAddress("localhost");
-        servidor.setPort(21);
-        servidor.setUsername("Axel");
-        servidor.setPassword("password");
+        servidor.setAddress(jTextFieldHost.getText());
+        if(!jTextFieldPort.getText().isEmpty()){
+            servidor.setPort(Integer.parseInt(jTextFieldPort.getText()));
+        }else{
+            servidor.setPort(21);
+        }
+        servidor.setUsername(jTextFieldUsername.getText());
+        servidor.setPassword(jTextFieldPassword.getText());
+//        servidor.setAddress("192.168.0.3");
+//        servidor.setAddress("localhost");
+//        servidor.setPort(21);
+//        servidor.setUsername("Axel");
+//        servidor.setPassword("password");
 
         try {
             ftpClient = serviceCliente.conectarseServidor(servidor);
             if(ftpClient.isConnected()){
-                jLabelEstado.setText("Estado: Conectado");
-                jLabelEstado.setForeground(Color.GREEN);
+                estadoPanel("Estado: Conectado", Color.GREEN);
+                //mostrarArchivos.refreshButton();
             }
         } catch (ServiceException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -67,18 +70,17 @@ public class Conectarse extends JPanel {
     }
 
     public void desconectarseServer(){
-        try {
-            serviceCliente.desconectarServidor();
-            if(!ftpClient.isConnected()){
-                jLabelEstado.setText("Estado: Desconectado");
-                jLabelEstado.setForeground(Color.RED);
+        if((ServiceCliente.getFtpClient())!=null) {
+            try {
+                serviceCliente.desconectarServidor();
+                if (!ftpClient.isConnected()) {
+                    estadoPanel("Estado: Desconectado", Color.RED);
+                }
+            } catch (ServiceException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (ServiceException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-
 
     public void armarPanel() {
         conectarse = new JPanel();
@@ -108,14 +110,12 @@ public class Conectarse extends JPanel {
 
         conectarse.add(jLabelHost);
         conectarse.add(jTextFieldHost);
-        conectarse.add(jLabelPort);
-        conectarse.add(jTextFieldPort);
         conectarse.add(jLabelUsername);
         conectarse.add(jTextFieldUsername);
         conectarse.add(jLabelPassword);
         conectarse.add(jTextFieldPassword);
-
-
+        conectarse.add(jLabelPort);
+        conectarse.add(jTextFieldPort);
 
         setLayout(new BorderLayout());
         conectarse.setPreferredSize(new Dimension(1000,25));
@@ -135,9 +135,6 @@ public class Conectarse extends JPanel {
         jLabelEstado.setForeground(Color.RED);
         add(estado, BorderLayout.CENTER);
 
-
-
-
         jButtonConectar.addActionListener(new ActionListener() { //ACCION DE BOTON CONECTAR
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -152,11 +149,13 @@ public class Conectarse extends JPanel {
                 desconectarseServer();
             }
         });
+    }
 
-
+    public void estadoPanel(String estadoActual, Color colorEstado){
+        jLabelEstado.setText(estadoActual);
+        jLabelEstado.setForeground(colorEstado);
     }
 }
-
 
 
 

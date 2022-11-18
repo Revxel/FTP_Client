@@ -1,7 +1,6 @@
 package com.company.dao;
 
 import com.company.entidades.server;
-import com.company.service.ServiceCliente;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -36,7 +35,6 @@ public class DAOCliente <cliente> implements IDAO <FTPClient> {
             } else {
                 System.out.println("Credenciales invalidas (Username o password)");
                 clienteFTP.disconnect();
-
             }
         } catch (IOException e) {
             throw new DAOException(e.getMessage());
@@ -132,7 +130,7 @@ public class DAOCliente <cliente> implements IDAO <FTPClient> {
     @Override
     public void renombrarRemoto(String oldPath, String newName, FTPClient ftpClient) throws DAOException {
         if (ftpClient.isConnected()) {
-//            try {
+//            try { //No anda
 //                System.out.println(oldPath);
 //                //System.out.println(str+"/"+newName);
 //                boolean estado = ftpClient.rename(oldPath, str+"/"+newName);

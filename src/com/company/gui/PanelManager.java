@@ -11,7 +11,6 @@ public class PanelManager {
 
     private MostrarArchivos mostrarArchivos;
     JFrame ventana;
-    JFrame ventanaBotoneraArchivos;
 
     public PanelManager(){
         ventana = new JFrame("Cliente FTP");
@@ -26,7 +25,7 @@ public class PanelManager {
         botoneraArchivos = new Archivos(this);
         mostrarArchivo(botoneraArchivos,BorderLayout.SOUTH);
 
-        mostrarArchivos = new MostrarArchivos(this);
+        mostrarArchivos = new MostrarArchivos();
         mostrarPanelArchivo(mostrarArchivos,BorderLayout.CENTER);
 
         ventana.setVisible(true);
@@ -141,9 +140,6 @@ public class PanelManager {
                 botoneraArchivos.borrarRemoto();
             }
         });
-
-
-
     }
 
     void mostrarConeccion(JPanel panel, String ubicacion){

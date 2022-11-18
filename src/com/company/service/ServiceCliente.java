@@ -3,11 +3,8 @@ package com.company.service;
 import com.company.dao.DAOCliente;
 import com.company.dao.DAOException;
 import com.company.entidades.server;
-import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 
-import java.io.File;
 
 public class ServiceCliente {
     private static DAOCliente daoCliente;
