@@ -15,6 +15,7 @@ public class Archivos extends JPanel {
     PanelManager panelArchivo;
     ServiceCliente serviceCliente = new ServiceCliente();
 
+
     JPanel botonesArchivos;
 
     JButton jButtonSubir;

@@ -1,0 +1,8 @@
+
+Alumno: Axel Ivan Guardia
+Legajo: 0123295
+Docente: Marta Semken
+Materia: Laboratorio 1
+Turno: Mañana
+
+

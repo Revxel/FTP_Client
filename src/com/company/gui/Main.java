@@ -4,7 +4,7 @@ Legajo: 0123295
 Docente: Marta Semken
 Materia: Laboratorio 1
 Turno: Mañana
- */
+*/
 
 package com.company.gui;
 import java.io.IOException;

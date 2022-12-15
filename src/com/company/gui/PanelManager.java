@@ -10,6 +10,7 @@ public class PanelManager {
     private Archivos botoneraArchivos;
 
     private MostrarArchivos mostrarArchivos;
+    private Terminal mostrarTerminal;
     JFrame ventana;
 
     public PanelManager(){
@@ -21,12 +22,14 @@ public class PanelManager {
         conectarseServidor = new Conectarse(this);
         mostrarConeccion(conectarseServidor,BorderLayout.NORTH);
 
+        mostrarArchivos = new MostrarArchivos();
+        mostrarPanelArchivo(mostrarArchivos,BorderLayout.CENTER);
 
         botoneraArchivos = new Archivos(this);
         mostrarArchivo(botoneraArchivos,BorderLayout.SOUTH);
 
-        mostrarArchivos = new MostrarArchivos();
-        mostrarPanelArchivo(mostrarArchivos,BorderLayout.CENTER);
+        mostrarTerminal = new Terminal(this);
+        mostrarTerminal(mostrarArchivos,BorderLayout.AFTER_LAST_LINE);
 
         ventana.setVisible(true);
         ventana.pack();
@@ -160,6 +163,13 @@ public class PanelManager {
         ventana.getContentPane().add(ubicacion,panel);
         ventana.getContentPane().validate();
         ventana.getContentPane().repaint();
+        ventana.pack();
+    }
+
+    void mostrarTerminal(JPanel panel, String ubicacion){
+        ventana.getContentPane().add(ubicacion,panel);
+        ventana.getContentPane().validate();;
+        ventana.getContentPane().repaint();;
         ventana.pack();
     }
 
