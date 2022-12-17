@@ -184,6 +184,13 @@ public class DAOCliente <cliente> implements IDAO <FTPClient> {
                 int i;
                 for (i = 0; i < (ftpFile.length); i++) {
                     files = ftpFile[i].getName();
+                    if(ftpFile[i].isFile()){
+                        if(ftpFile[i].isFile() && ftpFile[i+1].isFile()){
+                            outputStream.write("├─".getBytes());
+                        }else{
+                            outputStream.write("└─".getBytes());
+                        }
+                    }
                     outputStream.write((files + System.lineSeparator()).getBytes());
                 }
             } catch (IOException e) {
@@ -203,6 +210,13 @@ public class DAOCliente <cliente> implements IDAO <FTPClient> {
             int i;
             for (i = 0; i < (listOfFiles.length); i++) {
                 files = listOfFiles[i].getName();
+                if(listOfFiles[i].isFile() && !listOfFiles[i].isHidden()){
+                    if(listOfFiles[i].isFile() && listOfFiles[i+1].isFile()){
+                        outputStream.write("├─".getBytes());
+                    }else{
+                        outputStream.write("└─".getBytes());
+                    }
+                }
                 outputStream.write((files + System.lineSeparator()).getBytes());
             }
         } catch (IOException e) {

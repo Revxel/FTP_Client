@@ -4,6 +4,7 @@ import com.company.service.ServiceCliente;
 import com.company.service.ServiceException;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -76,19 +77,6 @@ public class MostrarArchivos extends JPanel {
 
     }
 
-//    void refreshButton(){
-//        try {
-//            if(pathRemoto == null){
-//                pathRemoto = ServiceCliente.getFtpClient().printWorkingDirectory();
-//                jTextFieldDir2.setText(pathRemoto);
-//            }
-//            pathRemoto=jTextFieldDir2.getText();
-//            jTextFieldDir.setText(pathRemoto);
-//            jTextArea.setText(ServiceCliente.mostrarArchivosPantallaRemoto(pathRemoto));
-//        } catch (ServiceException | IOException e) {
-//            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
 
     void armarPanelArchivo(String path, String ubicacion){
         JButton jButton;
@@ -114,6 +102,8 @@ public class MostrarArchivos extends JPanel {
         add(frame,ubicacion);
 
         jTextFieldDir.setText(path);
+
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
 
         try {
             jTextArea.append(ServiceCliente.mostrarArchivosPantallaLocal(path));

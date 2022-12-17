@@ -9,12 +9,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.*;
+import java.util.Scanner;
 
 public class Archivos extends JPanel {
     PanelManager panelArchivo;
     ServiceCliente serviceCliente = new ServiceCliente();
-
 
     JPanel botonesArchivos;
 
@@ -24,20 +24,35 @@ public class Archivos extends JPanel {
     JButton jButtonRenombrarRemoto;
     JButton jButtonBorrarLocal;
     JButton jButtonBorrarRemoto;
+    JButton jButtonInput;
+    JTextField jTextField;
 
-    public Archivos(PanelManager panelPrincipal){
-        panelArchivo = panelPrincipal;
-        armarPanelArchivo(null);
+    public Archivos(){
+        armarPanelArchivo();
+        //armarTerminal();
+
     }
 
-    public void armarPanelArchivo(server servidor){
+    public void armarTerminal(){
+        jTextField = new JTextField("Terminal",20);
+        botonesArchivos.add(jTextField);
+    }
+
+    public void armarPanelArchivo() {
         botonesArchivos = new JPanel();
+        botonesArchivos.setLayout(new GridBagLayout());
+
+        GridBagConstraints cst = new GridBagConstraints();
+
         jButtonSubir = new JButton("Subir");
-        jButtonBajar =  new JButton("Bajar");
+        jButtonBajar = new JButton("Bajar");
         jButtonRenombrarLocal = new JButton("Renombrar Local");
         jButtonRenombrarRemoto = new JButton("Renombrar Remoto");
         jButtonBorrarLocal = new JButton("Borrar Local");
         jButtonBorrarRemoto = new JButton("Borrar Remoto");
+        jButtonInput = new JButton("Enter");
+        jTextField = new JTextField("Terminal");
+
 
         botonesArchivos.add(jButtonSubir);
         botonesArchivos.add(jButtonBajar);
@@ -46,7 +61,22 @@ public class Archivos extends JPanel {
         botonesArchivos.add(jButtonBorrarLocal);
         botonesArchivos.add(jButtonBorrarRemoto);
 
-        add(botonesArchivos,BorderLayout.CENTER);
+
+        cst.fill = GridBagConstraints.HORIZONTAL;
+        cst.gridwidth = 5;
+        cst.gridx = 0;
+        cst.gridy = 1;
+        botonesArchivos.add(jTextField,cst);
+
+        cst.fill = GridBagConstraints.HORIZONTAL;
+        cst.gridwidth = 1;
+        cst.gridx = 5;
+        cst.gridy = 1;
+        botonesArchivos.add(jButtonInput,cst);
+
+
+        add(botonesArchivos,BorderLayout.NORTH);
+
 
         FTPClient ftpClient= ServiceCliente.getFtpClient();
         if(ftpClient!=null){
@@ -103,6 +133,22 @@ public class Archivos extends JPanel {
                 }
             }
         });
+        jButtonInput.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                botonesArchivos.getRootPane().setDefaultButton(jButtonInput);
+                if(!jTextField.getText().isEmpty()){
+                    var input = jTextField.getText();
+                    ShellCommand(input);
+                    jTextField.setText("");
+                }
+
+            }
+        });
+
+
+
     }
 
     public void subirArchivo(){
@@ -210,5 +256,25 @@ public class Archivos extends JPanel {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    public static void ShellCommand(String args){
+        try {
+            Process proceso = Runtime.getRuntime().exec(args);
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(proceso.getInputStream()));
+
+            String line = "";
+            while((line = reader.readLine()) != null) {
+                System.out.print(line + "\n");
+            }
+            proceso.waitFor();
+        } catch (IOException | InterruptedException ex) {
+            System.out.println("'"+args+"' No es un comando reconocido");
+            throw new RuntimeException(ex);
+        }finally {
+            return;
+        }
+
     }
 }

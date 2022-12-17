@@ -25,14 +25,14 @@ public class PanelManager {
         mostrarArchivos = new MostrarArchivos();
         mostrarPanelArchivo(mostrarArchivos,BorderLayout.CENTER);
 
-        botoneraArchivos = new Archivos(this);
+        mostrarTerminal = new Terminal();
+        //mostrarTerminal(mostrarTerminal,BorderLayout.);
+
+        botoneraArchivos = new Archivos();
         mostrarArchivo(botoneraArchivos,BorderLayout.SOUTH);
 
-        mostrarTerminal = new Terminal(this);
-        mostrarTerminal(mostrarArchivos,BorderLayout.AFTER_LAST_LINE);
-
         ventana.setVisible(true);
-        ventana.pack();
+        //ventana.pack();
 
     }
 
