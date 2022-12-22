@@ -29,13 +29,6 @@ public class Archivos extends JPanel {
 
     public Archivos(){
         armarPanelArchivo();
-        //armarTerminal();
-
-    }
-
-    public void armarTerminal(){
-        jTextField = new JTextField("Terminal",20);
-        botonesArchivos.add(jTextField);
     }
 
     public void armarPanelArchivo() {
@@ -136,8 +129,7 @@ public class Archivos extends JPanel {
         jButtonInput.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e) {
-                botonesArchivos.getRootPane().setDefaultButton(jButtonInput);
+            public void actionPerformed(ActionEvent actionEvent) {
                 if(!jTextField.getText().isEmpty()){
                     var input = jTextField.getText();
                     ShellCommand(input);

@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
 
 public class Conectarse extends JPanel {
     FTPClient ftpClient;
-    MostrarArchivos mostrarArchivos = new MostrarArchivos();
     ServiceCliente serviceCliente = new ServiceCliente();
     JPanel conectarse;
     JPanel botones;
@@ -29,15 +28,14 @@ public class Conectarse extends JPanel {
     JTextField jTextFieldPort;
     JTextField jTextFieldUsername;
     JTextField jTextFieldPassword;
-    JTextField jTextFieldEstado;
 
     JButton jButtonConectar;
     JButton jButtonDesconectar;
-    JButton jButtonGuardar; // Este todavia no hace nada
 
     server servidor = new server();
 
     PanelManager panel;
+
 
     public Conectarse(PanelManager panelPrincipal) {
         panel = panelPrincipal;
@@ -56,14 +54,15 @@ public class Conectarse extends JPanel {
         servidor.setUsername(jTextFieldUsername.getText());
         servidor.setPassword(jTextFieldPassword.getText());
 
-
         try {
             ftpClient = serviceCliente.conectarseServidor(servidor);
             if(ftpClient.isConnected()){
                 estadoPanel("Estado: Conectado", Color.GREEN);
-                //mostrarArchivos.refreshButton();
+            }else if(servidor.getEstado()==2){
+                estadoPanel("Estado: Credenciales Inválidas", Color.BLUE);
             }
         } catch (ServiceException e) {
+            estadoPanel("Estado: Host no existe", Color.RED);
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -74,6 +73,8 @@ public class Conectarse extends JPanel {
                 serviceCliente.desconectarServidor();
                 if (!ftpClient.isConnected()) {
                     estadoPanel("Estado: Desconectado", Color.RED);
+                    servidor.setEstado(0);
+
                 }
             } catch (ServiceException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -83,46 +84,88 @@ public class Conectarse extends JPanel {
 
     public void armarPanel() {
         conectarse = new JPanel();
-        conectarse.setLayout(new GridLayout(1, 8));
+        conectarse.setLayout(new GridBagLayout());
+        GridBagConstraints cst = new GridBagConstraints();
 
         jButtonConectar = new JButton("Conectar");
+        jButtonConectar.setPreferredSize(new Dimension(150,28));
         jButtonDesconectar = new JButton("Desconectar");
+        jButtonDesconectar.setPreferredSize(new Dimension(150,28));
 
         jLabelEstado = new JLabel("Estado: Desconectado");
-        jLabelHost = new JLabel("Host");
-        jLabelPort = new JLabel("Port");
-        jLabelUsername = new JLabel("Username");
-        jLabelPassword = new JLabel("Password");
-        jTextFieldHost = new JTextField(20);
-        jTextFieldPort = new JTextField(20);
-        jTextFieldUsername = new JTextField(20);
-        jTextFieldPassword = new JTextField(20);
+        jLabelHost = new JLabel("Host:");
+        jLabelPort = new JLabel("       Port:");
+        jLabelUsername = new JLabel("       Username:");
+        jLabelPassword = new JLabel("       Password:");
+        jTextFieldHost = new JTextField(15);
+        jTextFieldHost.setSize(20,1);
+        jTextFieldPort = new JTextField(5);
+        jTextFieldPort.setSize(10,1);
+        jTextFieldUsername = new JTextField(15);
+        jTextFieldUsername.setSize(20,1);
+        jTextFieldPassword = new JTextField(15);
+        jTextFieldPassword.setSize(20,1);
 
-        jLabelHost.setHorizontalAlignment(SwingConstants.RIGHT);
-        jLabelHost.setPreferredSize(new Dimension(1, 1));
-        jLabelPort.setHorizontalAlignment(SwingConstants.RIGHT);
-        jLabelPort.setPreferredSize(new Dimension(1, 1));
-        jLabelUsername.setHorizontalAlignment(SwingConstants.RIGHT);
-        jLabelUsername.setPreferredSize(new Dimension(1, 1));
-        jLabelPassword.setHorizontalAlignment(SwingConstants.RIGHT);
-        jLabelPassword.setPreferredSize(new Dimension(1, 1));
+        //jLabelHost.setHorizontalAlignment(SwingConstants.RIGHT);
+        //jLabelHost.setPreferredSize(new Dimension(1, 1));
+        //jLabelPort.setHorizontalAlignment(SwingConstants.RIGHT);
+        //jLabelPort.setPreferredSize(new Dimension(1, 1));
+        //jLabelUsername.setHorizontalAlignment(SwingConstants.RIGHT);
+        //jLabelUsername.setPreferredSize(new Dimension(1, 1));
+        //jLabelPassword.setHorizontalAlignment(SwingConstants.RIGHT);
+        //jLabelPassword.setPreferredSize(new Dimension(1, 1));
 
-        conectarse.add(jLabelHost);
-        conectarse.add(jTextFieldHost);
-        conectarse.add(jLabelUsername);
-        conectarse.add(jTextFieldUsername);
-        conectarse.add(jLabelPassword);
-        conectarse.add(jTextFieldPassword);
-        conectarse.add(jLabelPort);
-        conectarse.add(jTextFieldPort);
+
+        cst.fill = GridBagConstraints.HORIZONTAL;
+        cst.gridwidth = 1;
+        cst.gridx = 0;
+//        cst.gridy = 0;
+        conectarse.add(jLabelHost,cst);
+        cst.fill = GridBagConstraints.HORIZONTAL;
+        cst.gridwidth = 1;
+        cst.gridx = 1;
+//        cst.gridy = 1;
+        conectarse.add(jTextFieldHost,cst);
+
+        cst.fill = GridBagConstraints.HORIZONTAL;
+        cst.gridwidth = 1;
+        cst.gridx = 2;
+//        cst.gridy = 0;
+        conectarse.add(jLabelUsername,cst);
+        cst.fill = GridBagConstraints.HORIZONTAL;
+        cst.gridwidth = 1;
+        cst.gridx = 3;
+//        cst.gridy = 1;
+        conectarse.add(jTextFieldUsername,cst);
+
+        cst.fill = GridBagConstraints.HORIZONTAL;
+        cst.gridwidth = 1;
+        cst.gridx = 4;
+//        cst.gridy = 0;
+        conectarse.add(jLabelPassword,cst);
+        cst.fill = GridBagConstraints.HORIZONTAL;
+        cst.gridwidth = 1;
+        cst.gridx = 5;
+//        cst.gridy = 1;
+        conectarse.add(jTextFieldPassword,cst);
+
+        cst.fill = GridBagConstraints.HORIZONTAL;
+        cst.gridwidth = 1;
+        cst.gridx = 6;
+//        cst.gridy = 0;
+        conectarse.add(jLabelPort,cst);
+        cst.fill = GridBagConstraints.HORIZONTAL;
+        cst.gridwidth = 1;
+        cst.gridx = 7;
+//        cst.gridy = 1;
+        conectarse.add(jTextFieldPort,cst);
 
         setLayout(new BorderLayout());
         conectarse.setPreferredSize(new Dimension(1000,25));
         add(conectarse, BorderLayout.SOUTH);
 
         botones = new JPanel();
-        jButtonConectar = new JButton("Conectar");
-        jButtonDesconectar = new JButton("Desconectar");
+        botones.setLayout(new GridBagLayout());
 
         botones.add(jButtonConectar);
         botones.add(jButtonDesconectar);
@@ -138,6 +181,7 @@ public class Conectarse extends JPanel {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 conectarServer();
+
             }
         });
 

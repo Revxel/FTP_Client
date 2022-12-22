@@ -12,6 +12,7 @@ public class server {
     private int port;
     private String username;
     private String password;
+    private int estado = 0;
 
     public String getAddress() {
         return address;
@@ -43,6 +44,14 @@ public class server {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
 }
 

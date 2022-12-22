@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.prefs.Preferences;
 import org.apache.commons.lang.*;
 
@@ -29,13 +28,11 @@ public class PanelManager {
         mostrarPanelArchivo(mostrarArchivos,BorderLayout.CENTER);
 
         mostrarTerminal = new Terminal();
-        //mostrarTerminal(mostrarTerminal,BorderLayout.);
 
         botoneraArchivos = new Archivos();
         mostrarArchivo(botoneraArchivos,BorderLayout.SOUTH);
 
         ventana.setVisible(true);
-        //ventana.pack();
 
     }
 
@@ -109,6 +106,7 @@ public class PanelManager {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 conectarseServidor.conectarServer();
+                mostrarArchivos.refreshButton();
             }
         });
 
@@ -227,6 +225,7 @@ public class PanelManager {
                     conectarseServidor.jTextFieldPort.setText(StringUtils.substringBetween(prefer.get("Username"+finalI,"Error"),":","/"));
                     conectarseServidor.jTextFieldPassword.setText(StringUtils.substringAfter(prefer.get("Username"+finalI,"Error"),"/"));
                     conectarseServidor.conectarServer();
+                    mostrarArchivos.refreshButton();
                 }
             });
             i++;

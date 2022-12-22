@@ -11,7 +11,6 @@ import java.io.*;
 
 
 public class DAOCliente <cliente> implements IDAO <FTPClient> {
-
     @Override
     public FTPClient conectarse(server servidor) throws DAOException {
         FTPClient clienteFTP = new FTPClient();
@@ -32,8 +31,10 @@ public class DAOCliente <cliente> implements IDAO <FTPClient> {
             boolean loginSatisfactorio = clienteFTP.login(username, password);
             if (loginSatisfactorio) {
                 System.out.println("Inicio de sesión correcto");
+                servidor.setEstado(1);
             } else {
                 System.out.println("Credenciales invalidas (Username o password)");
+                servidor.setEstado(2);
                 clienteFTP.disconnect();
             }
         } catch (IOException e) {

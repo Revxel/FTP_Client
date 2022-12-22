@@ -14,6 +14,8 @@ import java.io.IOException;
 public class MostrarArchivos extends JPanel {
     JTextField jTextFieldDir;
     JTextArea jTextArea;
+    JTextArea jTextArea1;
+    JPanel frame1 = new JPanel();
     static String pathRemoto=null;
     public JTextField jTextFieldDir2;
     String path2;
@@ -32,46 +34,35 @@ public class MostrarArchivos extends JPanel {
     }
 
     void armarPanelArchivoRemoto(String ubicacion){
-        JTextField jTextFieldDir;
-        JTextArea jTextArea;
+        JTextField jTextFieldDir1;
+        //JTextArea jTextArea1;
         JButton jButtonRefresh;
         JScrollPane jScrollPane;
 
-        JPanel frame = new JPanel();
-        frame.setLayout(new BorderLayout());
+        frame1.setLayout(new BorderLayout());
 
-        jTextFieldDir = new JTextField(1);
-        jTextArea = new JTextArea(20,30);
+        jTextFieldDir1 = new JTextField(1);
+        jTextArea1 = new JTextArea(25,40);
         jTextFieldDir2 = new JTextField(1);
         jButtonRefresh= new JButton("Refresh");
-        jScrollPane = new JScrollPane(jTextArea);
+        jScrollPane = new JScrollPane(jTextArea1);
 
-        jTextFieldDir.setEditable(false);
-        jTextArea.setEditable(false);
+        jTextFieldDir1.setEditable(false);
+        jTextArea1.setEditable(false);
 
-        frame.add(jTextFieldDir, BorderLayout.BEFORE_FIRST_LINE);
-        frame.add(jScrollPane, BorderLayout.SOUTH);
-        frame.add(jTextFieldDir2, BorderLayout.CENTER);
-        frame.add(jButtonRefresh,BorderLayout.EAST);
 
-        add(frame,ubicacion);
+        frame1.add(jTextFieldDir1, BorderLayout.BEFORE_FIRST_LINE);
+        frame1.add(jScrollPane, BorderLayout.SOUTH);
+        frame1.add(jTextFieldDir2, BorderLayout.CENTER);
+        frame1.add(jButtonRefresh,BorderLayout.EAST);
+
+        add(frame1,ubicacion);
 
         jButtonRefresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if((ServiceCliente.getFtpClient())!=null && ServiceCliente.getFtpClient().isConnected()) {
-                    try {
-                        if (pathRemoto == null) {
-                            pathRemoto = ServiceCliente.getFtpClient().printWorkingDirectory();
-                            jTextFieldDir2.setText(pathRemoto);
-                        }
-                        pathRemoto = jTextFieldDir2.getText();
-                        jTextFieldDir.setText(pathRemoto);
-                        jTextArea.setText(ServiceCliente.mostrarArchivosPantallaRemoto(pathRemoto));
-                    } catch (ServiceException | IOException e) {
-                        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
+                frame1.getRootPane().setDefaultButton(jButtonRefresh);
+                refreshButton();
             }
         });
 
@@ -88,7 +79,7 @@ public class MostrarArchivos extends JPanel {
 
 
         jTextFieldDir = new JTextField(1);
-        jTextArea = new JTextArea(20,30);
+        jTextArea = new JTextArea(25,40);
         jButton = new JButton("Carpeta");
         jScrollPane = new JScrollPane(jTextArea);
 
@@ -131,7 +122,21 @@ public class MostrarArchivos extends JPanel {
                 }
             }
         });
-
     }
 
+    public void refreshButton(){
+        if((ServiceCliente.getFtpClient())!=null && ServiceCliente.getFtpClient().isConnected()) {
+            try {
+                if (pathRemoto == null) {
+                    pathRemoto = ServiceCliente.getFtpClient().printWorkingDirectory();
+                    jTextFieldDir2.setText(pathRemoto);
+                }
+                pathRemoto = jTextFieldDir2.getText();
+                jTextFieldDir2.setText(pathRemoto);
+                jTextArea1.setText(ServiceCliente.mostrarArchivosPantallaRemoto(pathRemoto));
+            } catch (ServiceException | IOException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
 }
