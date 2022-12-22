@@ -35,6 +35,8 @@ public class Conectarse extends JPanel {
     JButton jButtonDesconectar;
     JButton jButtonGuardar; // Este todavia no hace nada
 
+    server servidor = new server();
+
     PanelManager panel;
 
     public Conectarse(PanelManager panelPrincipal) {
@@ -42,8 +44,9 @@ public class Conectarse extends JPanel {
         armarPanel();
     }
 
+
+
     public void conectarServer(){
-        server servidor = new server();
         servidor.setAddress(jTextFieldHost.getText());
         if(!jTextFieldPort.getText().isEmpty()){
             servidor.setPort(Integer.parseInt(jTextFieldPort.getText()));
@@ -52,11 +55,7 @@ public class Conectarse extends JPanel {
         }
         servidor.setUsername(jTextFieldUsername.getText());
         servidor.setPassword(jTextFieldPassword.getText());
-//        servidor.setAddress("192.168.0.3");
-//        servidor.setAddress("localhost");
-//        servidor.setPort(21);
-//        servidor.setUsername("Axel");
-//        servidor.setPassword("password");
+
 
         try {
             ftpClient = serviceCliente.conectarseServidor(servidor);

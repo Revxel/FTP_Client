@@ -154,13 +154,8 @@ public class Archivos extends JPanel {
     public void subirArchivo(){
         if((ServiceCliente.getFtpClient())!=null) {
             JFileChooser file_origin = new JFileChooser();
-            JFileChooser file_destination = new JFileChooser();
 
             file_origin.setCurrentDirectory(file_origin.getFileSystemView().getParentDirectory(new File("C:\\")));
-
-            //file_destination.setCurrentDirectory(file_origin.getFileSystemView().getParentDirectory(new File("C:\\")));
-            // file_destination.setCurrentDirectory(new File("/test/"));
-            //file_destination.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); //Esto me permite seleccionar solamente un directorio y no un archivo
 
             int res = file_origin.showOpenDialog(null);
 
